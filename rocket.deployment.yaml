@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rocketchat-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rocketchat-server
+  template:
+    metadata:
+      labels:
+        app: rocketchat-server
+    spec:
+      containers:
+        - name: rocketchat-server
+          image: rocketchat/rocket.chat:4.3.1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: ROOT_URL
+              value: "https://"
+            - name: MONGO_URL
+              value: mongodb://rocketchat-mongo-0.rocketchat-mongo:27017,rocketchat-mongo-1.rocketchat-mongo:27017,rocketchat-mongo-2.rocketchat-mongo:27017/rocketchat?replicaSet=rs0
+            - name: INSTANCE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: Accounts_UseDNSDomainCheck
+              value: "False"
+            - name: OVERWRITE_SETTING_Show_Setup_Wizard
+              value: "completed"
+            - name: ADMIN_USERNAME
+              value: ""
+            - name: ADMIN_PASS
+              value: "123"
+            - name: ADMIN_EMAIL
+              value: ""
+            - name: Register_Server
+              value: "true"
+            - name: Cloud_Service_Agree_PrivacyTerms
+              value: "true"
+            - name: CREATE_TOKENS_FOR_USERS
+              value: "true"
+          imagePullPolicy: Always

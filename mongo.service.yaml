@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rocketchat-mongo
+  labels:
+    app: rocketchat-mongo
+spec:
+  selector:
+    app: rocketchat-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+  clusterIP: None
